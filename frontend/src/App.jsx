@@ -1,35 +1,40 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from "react";
+import "./App.css";
+import Login from "./pages/Login";
+import { Route, Routes } from "react-router-dom";
+import SignUp from "./pages/SignUp";
+import Home from "./pages/Home";
+import Landing from "./pages/Landing";
+import SUmm from "./pages/Summ";
+import AdminHome from "./pages/AdminHome";
+import ViewCourse from "./pages/ViewCourse";
+import AddEnquiry from "./pages/AddEnquiry";
+import ViewEnquiry from "./pages/ViewEnquiry";
+import AdminViewCourse from "./pages/AdminVIewCourse";
+import AdminEnquiry from "./pages/AdminEnquiry";
+import Settings from "./pages/Settings";
+import CourseDetails from "./pages/CourseDetails";
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <Routes>
+        <Route path="/" element={<Landing />} />
+        <Route path="/summ" element={<SUmm />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/user/home" element={<Home />} />
+        <Route path="/user/courses" element={<ViewCourse />} />
+        <Route path="/user/addenquiry" element={<AddEnquiry />} />
+        <Route path="/user/viewenquiry" element={<ViewEnquiry />} />
+        <Route path="/admin/home" element={<AdminHome />} />
+        <Route path="/admin/courses" element={<AdminViewCourse />} />
+        <Route path="/admin/enquiry" element={<AdminEnquiry />} />
+        <Route path="/admin/settings" element={<Settings />} />
+        <Route path="/admin/coursedetails" element={<CourseDetails />} />
+      </Routes>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
