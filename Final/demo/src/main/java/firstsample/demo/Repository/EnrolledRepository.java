@@ -34,4 +34,7 @@ public interface EnrolledRepository extends CrudRepository<EnrolledcourseModel, 
     @Query(value = "SELECT * FROM enrolledcourse_model WHERE user_id =:id and course_id=:cid", nativeQuery = true)
     List<EnrolledcourseModel> findByUserIdAndCourseId(int id, int cid);
 
+    @Query(value = "SELECT * FROM enrolledcourse_model WHERE course_id=:cid", nativeQuery = true)
+    List<EnrolledcourseModel> findByCourseId(int cid);
+
 }

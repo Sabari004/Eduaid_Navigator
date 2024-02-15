@@ -28,6 +28,7 @@ import {
 } from "react-router-dom";
 import Login from "./Login";
 import SignUp from "./SignUp";
+import axios from "axios";
 const FeedbackCard = ({
   index,
   testimonial,
@@ -65,13 +66,20 @@ const FeedbackCard = ({
 const Landing = () => {
   const container = useRef();
   const navigate = useNavigate();
-  const [featuredContentTitle, setFeaturedContentTitle] = useState("");
-  const [featuredContentDescription, setFeaturedContentDescription] =
-    useState("");
+  const [title1, setTitle1] = useState("");
+  const [title2, setTitle2] = useState("");
+  const [desc1, setDesc1] = useState("");
+  const [desc2, setDesc2] = useState("");
+
   useEffect(() => {
-    const data = JSON.parse(localStorage.getItem("det"));
-    setFeaturedContentTitle(data.title);
-    setFeaturedContentDescription(data.desc);
+    axios.get("http://localhost:8989/getSite/1").then((r) => {
+      setTitle1(r.data.title);
+      setDesc1(r.data.descr);
+    });
+    axios.get("http://localhost:8989/getSite/2").then((r) => {
+      setTitle2(r.data.title);
+      setDesc2(r.data.descr);
+    });
   });
 
   useGSAP(
@@ -94,7 +102,10 @@ const Landing = () => {
               </div>
               <div class="hidden md:flex justify-around space-x-4"></div>
             </div>
-            <div class="flex space-x-4 items-center">
+            <div class="flex space-x-8 items-center">
+              <Link to="/Contact" class="text-white text-sm">
+                CONTACT
+              </Link>
               <Link to="/login" class="text-white text-sm">
                 LOGIN
               </Link>
@@ -148,7 +159,7 @@ const Landing = () => {
               >
                 <h2>
                   {/* Be a Man of the Future. */}
-                  {featuredContentTitle}
+                  {title1}
                 </h2>
                 <p style={{ maxWidth: "400px" }}>
                   {/* Featuring a sleek, metallic design inspired by advanced
@@ -156,7 +167,7 @@ const Landing = () => {
                   functional. But it's not just a pretty face - inside, you'll
                   find a nourishing and protective aftershave formula that will
                   leave your skin feeling refreshed and hydrated. */}
-                  {featuredContentDescription}
+                  {desc1}
                 </p>
                 <button>Read more</button>
               </div>
@@ -170,14 +181,8 @@ const Landing = () => {
                 className="col"
                 style={{ right: `40px`, width: "540px", float: "right" }}
               >
-                <h2 style={{ maxWidth: "440px" }}>Tech-Savvy Side</h2>
-                <p style={{ maxWidth: "440px" }}>
-                  Featuring a sleek, metallic design inspired by advanced
-                  technology, this aftershave bottle is as stylish as it is
-                  functional. But it's not just a pretty face - inside, you'll
-                  find a nourishing and protective aftershave formula that will
-                  leave your skin feeling refreshed and hydrated.
-                </p>
+                <h2 style={{ maxWidth: "440px" }}>{title2}</h2>
+                <p style={{ maxWidth: "440px" }}>{desc2}</p>
                 <button>Read more</button>
               </div>
             </div>

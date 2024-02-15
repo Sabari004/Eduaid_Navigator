@@ -1,5 +1,6 @@
 package firstsample.demo.controller;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,5 +45,10 @@ public class UserAuthenticationController {
     @GetMapping("/getuser/{email}")
     public Optional<User> findUserEmail(@PathVariable String email) {
         return userservice.findByEmail(email);
+    }
+
+    @GetMapping("/getAllUser")
+    public List<User> findAllUser() {
+        return userservice.findAll();
     }
 }

@@ -1,9 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectUser } from "../redux/userSlice";
+import axios from "axios";
 const Home = () => {
   const useri = useSelector(selectUser);
   // useEffect(() => [alert(useri?.username)]);
@@ -15,79 +16,46 @@ const Home = () => {
     status: "Active",
     role: "Owner",
   };
+  const [course, setCourse] = useState([]);
+  const [user, setUser] = useState({});
+  const [count, setCount] = useState();
+  const [rupee, setRupee] = useState();
+  // const navigate = useNavigate();
 
-  const users = [
-    {
-      name: "John Doe",
-      email: "john@example.com",
-      title: "Software Engineer",
-      title2: "Web dev",
-      status: "Active",
-    },
-    {
-      name: "Vijay",
-      email: "vijay@example.com",
-      title: "DevOps",
-      title2: "Web dev",
-      status: "Completed",
-    },
-    {
-      name: "John Doe",
-      email: "john@example.com",
-      title: "Software Engineer",
-      title2: "Web dev",
-      status: "Active",
-    },
-    {
-      name: "Vijay",
-      email: "vijay@example.com",
-      title: "DevOps",
-      title2: "Web dev",
-      status: "Completed",
-    },
-    {
-      name: "John Doe",
-      email: "john@example.com",
-      title: "Software Engineer",
-      title2: "Web dev",
-      status: "Active",
-    },
-    {
-      name: "Vijay",
-      email: "vijay@example.com",
-      title: "DevOps",
-      title2: "Web dev",
-      status: "Completed",
-    },
-    {
-      name: "John Doe",
-      email: "john@example.com",
-      title: "Software Engineer",
-      title2: "Web dev",
-      status: "Active",
-    },
-    {
-      name: "Vijay",
-      email: "vijay@example.com",
-      title: "DevOps",
-      title2: "Web dev",
-      status: "Completed",
-    },
-    {
-      name: "John Doe",
-      email: "john@example.com",
-      title: "Software Engineer",
-      title2: "Web dev",
-      status: "Active",
-    },
-    {
-      name: "Vijay",
-      email: "vijay@example.com",
-      title: "DevOps",
-      title2: "Web dev",
-      status: "Completed",
-    },
-  ];
+  const navigate = useNavigate();
+  useEffect(() => {
+    const id = JSON.parse(localStorage.getItem("user"));
+    axios
+      .get(`http://localhost:8989/api/v1/auth/getuser/${id.email}`)
+      .then((r) => {
+        axios
+          .get(`http://localhost:8989/getEnrollUser/${r.data.id}`)
+          .then((r1) => {
+            setCourse(r1.data);
+            // const completedCoursesCount = r1.data.filter(
+            //   (item) => item.courses.status === "Ongoing"
+            // ).length;
+            // setCount(completedCoursesCount);
+            // if (count != null && count !== 0)
+            //   console.log(completedCoursesCount);
+            let completedCoursesCount = 0;
+            console.log(r1.data);
+            for (let i = 0; i < r1.data.length; i++) {
+              if (r1.data[i].status === "Completed") {
+                completedCoursesCount++;
+              }
+            }
+            let r2 = 0;
+            // console.log(r1.data);
+            for (let i = 0; i < r1.data.length; i++) {
+              r2 += r1.data[i].courses.fees;
+            }
+            setRupee(r2);
+            setCount(completedCoursesCount);
+          });
+      });
+  }, []);
+
   return (
     <>
       <div className="relative sm:-8 p-4 bg-[#2D033B]  min-h-screen flex flex-row">
@@ -98,7 +66,10 @@ const Home = () => {
           <Navbar />
           <div className="mt-[70px] ml-5 w-[80vw]">
             <h3 class="text-3xl font-medium text-white">
-              Welcome {useri.username}
+              Welcome{" "}
+              {useri === null
+                ? JSON.parse(localStorage.getItem("user")).email
+                : useri.username}
             </h3>
 
             <div class="mt-4">
@@ -140,7 +111,9 @@ const Home = () => {
                     </div>
 
                     <div class="mx-5 h-[80px]">
-                      <h4 class="text-2xl font-semibold text-gray-700">8</h4>
+                      <h4 class="text-2xl font-semibold text-gray-700">
+                        {course.length}
+                      </h4>
                       <div class="text-gray-500">Course Enrolled</div>
                     </div>
                   </div>
@@ -171,7 +144,9 @@ const Home = () => {
                     </div>
 
                     <div class="mx-5 h-[80px]">
-                      <h4 class="text-2xl font-semibold text-gray-700">1</h4>
+                      <h4 class="text-2xl font-semibold text-gray-700">
+                        {count}
+                      </h4>
                       <div class="text-gray-500">Course Compleated</div>
                     </div>
                   </div>
@@ -202,8 +177,10 @@ const Home = () => {
                     </div>
 
                     <div class="mx-5 h-[80px]">
-                      <h4 class="text-2xl font-semibold text-gray-700">₹542</h4>
-                      <div class="text-gray-500">Rupee Saved</div>
+                      <h4 class="text-2xl font-semibold text-gray-700">
+                        ₹{rupee}
+                      </h4>
+                      <div class="text-gray-500">Rupee Spent</div>
                     </div>
                   </div>
                 </div>
@@ -216,47 +193,43 @@ const Home = () => {
                     <thead>
                       <tr>
                         <th class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
-                          Instructor
-                        </th>
-                        <th class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
                           Course
                         </th>
                         <th class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
+                          Instructor
+                        </th>
+                        <th class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
                           Status
+                        </th>
+                        <th class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
+                          View
                         </th>
                       </tr>
                     </thead>
 
                     <tbody class="bg-white">
-                      {users.map((u) => (
+                      {course.map((u) => (
                         <tr>
                           <td class="px-6 py-4 border-b border-gray-200 whitespace-nowrap">
                             <div class="flex items-center">
                               <div class="flex-shrink-0 w-10 h-10">
                                 <img
                                   class="w-10 h-10 rounded-full"
-                                  src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                                  src={u.courses.img_url}
                                   alt=""
                                 />
                               </div>
 
                               <div class="ml-4">
-                                <div class="text-sm font-medium leading-5 text-gray-900">
-                                  {u.name}
-                                </div>
-                                <div class="text-sm leading-5 text-gray-500">
-                                  {u.email}
+                                <div class="text-sm leading-5 text-gray-900">
+                                  {u.courses.course_name}
                                 </div>
                               </div>
                             </div>
                           </td>
-
                           <td class="px-6 py-4 border-b border-gray-200 whitespace-nowrap">
-                            <div class="text-sm leading-5 text-gray-900">
-                              {u.title}
-                            </div>
-                            <div class="text-sm leading-5 text-gray-500">
-                              {u.title2}
+                            <div class="text-sm font-medium leading-5 text-gray-900">
+                              {u.courses.instructor}
                             </div>
                           </td>
 
@@ -264,6 +237,18 @@ const Home = () => {
                             <span class="inline-flex px-2 text-xs font-semibold leading-5 text-green-800 bg-green-100 rounded-full">
                               {u.status}
                             </span>
+                          </td>
+                          <td class="px-6 py-4 border-b border-gray-200 whitespace-nowrap">
+                            <button
+                              onClick={(e) =>
+                                navigate(
+                                  "/user/viewcourses/" + u.courses.course_id
+                                )
+                              }
+                              className=" text-white p-2 rounded-md  bg-blue-600"
+                            >
+                              View
+                            </button>
                           </td>
                         </tr>
                       ))}

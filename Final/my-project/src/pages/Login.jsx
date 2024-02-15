@@ -15,9 +15,17 @@ const Login = () => {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    if (email.substring(0, 5).toLowerCase() === "admin")
+    if (email === "admin@gmail.com" && pass === "1234") {
+      localStorage.setItem(
+        "user",
+        JSON.stringify({
+          email: "admin@gmail.com",
+          pass: "1234",
+          token: "?????",
+        })
+      );
       navigate("/admin/home");
-    else {
+    } else {
       axios
         .post("http://localhost:8989/api/v1/auth/authenticate", {
           email,
@@ -30,14 +38,23 @@ const Login = () => {
               username: email,
             })
           );
-          localStorage.setItem(
-            "user",
-            JSON.stringify({
-              email: email,
-              pass: pass,
-              token: r.data.token,
-            })
-          );
+          axios
+            .get(`http://localhost:8989/api/v1/auth/getuser/${email}`)
+            .then((e) => {
+              localStorage.setItem(
+                "user",
+                JSON.stringify({
+                  id: e.data.id,
+                  email: email,
+                  pass: pass,
+                  token: r.data.token,
+                  phone: null,
+                  college: null,
+                  dob: null,
+                  name: e.data.name,
+                })
+              );
+            });
           if (email.substring(0, 5).toLowerCase() === "admin")
             navigate("/admin/home");
           else navigate("/user/home");
@@ -52,6 +69,36 @@ const Login = () => {
   };
   return (
     <>
+      <nav>
+        <div class="fixed w-screen  z-50">
+          <div class="flex justify-between px-10 shadow items-center bg-[#2D033B] h-[10vh]">
+            <div class="flex items-center space-x-8">
+              <div className="flex">
+                <img className="h-[40x] w-[40px]" src={icon}></img>
+                <Title />
+              </div>
+              <div class="hidden md:flex justify-around space-x-4"></div>
+            </div>
+            <div class="flex space-x-8 items-center">
+              <Link to="/" class="text-white text-sm">
+                HOME
+              </Link>
+              <Link to="/Contact" class="text-white text-sm">
+                CONTACT
+              </Link>
+              <Link to="/login" class="text-white text-sm">
+                LOGIN
+              </Link>
+              <Link
+                to="/signup"
+                class="bg-indigo-600 px-4 py-2 rounded text-white hover:bg-indigo-500 text-sm"
+              >
+                SIGNUP
+              </Link>
+            </div>
+          </div>
+        </div>
+      </nav>
       <div className="h-screen w-screen lg:flex bg-[#2D033B]">
         <div
           className="h-screen sm:w-screen lg:w-[50vw] order-2"
@@ -60,13 +107,6 @@ const Login = () => {
           <div className="">
             <section class=" h-screen bg-[#2D033B]">
               <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-                <a
-                  href="#"
-                  class="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white"
-                >
-                  <img class="w-14 h-14 mr-2" src={icon} alt="logo" />
-                  <Title />
-                </a>
                 <div class="w-full rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:border-[#E5B8F4]">
                   <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
                     <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">

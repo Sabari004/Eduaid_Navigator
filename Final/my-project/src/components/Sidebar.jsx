@@ -98,77 +98,88 @@ const Sidebar = () => {
         <div className="flex-1 flex flex-col justify-between items-center bg-[#1c1c24] rounded-[20px] w-[76px] py-4 mt-12">
           <div className="flex flex-col justify-center items-center gap-3">
             {/* Manual iteration of navlinks */}
-            <Icon
-              imgUrl={dashboard}
-              name="dashboard"
-              styles="/* Add your styles for dashboard */"
-              isActive={isActive === "dashboard"}
-              handleClick={() => {
-                setIsActive("dashboard");
-                navigate("/user/home");
-              }}
-            />
-            <Icon
-              imgUrl={createCampaign}
-              name="campaign"
-              styles="/* Add your styles for campaign */"
-              isActive={isActive === "campaign"}
-              handleClick={() => {
-                setIsActive("campaign");
-                navigate("/user/courses");
-              }}
-            />
-            <Icon
-              imgUrl={payment}
-              name="payment"
-              styles="/* Add your styles for payment */"
-              isActive={isActive === "payment"}
-              handleClick={() => {
-                setIsActive("payment");
-                navigate("/user/addenquiry");
-              }}
-            />
-            <Icon
-              imgUrl={withdraw}
-              name="withdraw"
-              styles="/* Add your styles for withdraw */"
-              isActive={isActive === "withdraw"}
-              handleClick={() => {
-                setIsActive("withdraw");
-                navigate("/user/viewenquiry");
-              }}
-            />
-
-            <button
-              onClick={onOpen}
-              className="w-[48px] h-[48px] rounded-[10px] bg-gray-00 flex justify-center items-center cursor-pointer"
-            >
-              {" "}
+            <div className="icon-container" data-icon="Dashboard">
               <Icon
-                imgUrl={profile}
-                name="profile"
-                styles="/* Add your styles for profile */"
-                isActive={isActive === "profile"}
-                // handleClick={() => {
-                //   setIsActive("profile");
-                //   navigate("/user/profile");
-                // }}
+                imgUrl={dashboard}
+                name="dashboard"
+                styles="/* Add your styles for dashboard */"
+                isActive={isActive === "dashboard"}
+                handleClick={() => {
+                  setIsActive("dashboard");
+                  navigate("/user/home");
+                }}
+              />
+            </div>
+            <div className="icon-container" data-icon="All Courses">
+              <Icon
+                imgUrl={createCampaign}
+                name="campaign"
+                styles="/* Add your styles for campaign */"
+                isActive={isActive === "campaign"}
+                handleClick={() => {
+                  setIsActive("campaign");
+                  navigate("/user/courses");
+                }}
+              />
+            </div>
+            <div className="icon-container" data-icon="Add Enquiry">
+              <Icon
+                imgUrl={payment}
+                name="payment"
+                styles="/* Add your styles for payment */"
+                isActive={isActive === "payment"}
+                handleClick={() => {
+                  setIsActive("payment");
+                  navigate("/user/addenquiry");
+                }}
+              />
+            </div>
+            <div className="icon-container" data-icon="View Enquiry">
+              <Icon
+                imgUrl={withdraw}
+                name="withdraw"
+                styles="/* Add your styles for withdraw */"
+                isActive={isActive === "withdraw"}
+                handleClick={() => {
+                  setIsActive("withdraw");
+                  navigate("/user/viewenquiry");
+                }}
+              />
+            </div>
+            <div className="icon-container" data-icon="Profile">
+              <button
                 onClick={onOpen}
+                className="w-[48px] h-[48px] rounded-[10px] bg-gray-00 flex justify-center items-center cursor-pointer"
               >
                 {" "}
-              </Icon>
-            </button>
-
-            <Icon
-              imgUrl={logout}
-              name="logout"
-              styles="/* Add your styles for logout */"
-              isActive={isActive === "logout"}
-              handleClick={() => {
-                setIsActive("logout");
-                navigate("/");
-              }}
-            />
+                <Icon
+                  imgUrl={profile}
+                  name="profile"
+                  styles="/* Add your styles for profile */"
+                  isActive={isActive === "profile"}
+                  handleClick={() => {
+                    setIsActive("profile");
+                    navigate("/user/profile");
+                  }}
+                  // onClick={onOpen}
+                >
+                  {" "}
+                </Icon>
+              </button>
+            </div>
+            <div className="icon-container" data-icon="Logout">
+              <Icon
+                imgUrl={logout}
+                name="logout"
+                styles="/* Add your styles for logout */"
+                isActive={isActive === "logout"}
+                handleClick={() => {
+                  setIsActive("logout");
+                  localStorage.clear();
+                  navigate("/");
+                }}
+              />
+            </div>
           </div>
           <Icon styles="bg-[#1c1c24] shadow-secondary" imgUrl={sun} />
         </div>

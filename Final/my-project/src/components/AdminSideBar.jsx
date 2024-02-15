@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { logo, sun } from "../assets";
 import { navlinks } from "../constants";
 import icon from "../assets/icon.png";
+import "../App.css";
 import {
   createCampaign,
   dashboard,
@@ -45,8 +46,6 @@ const Icon = ({ styles, name, imgUrl, isActive, disabled, handleClick }) => (
   </div>
 );
 const AdminSideBar = () => {
-  const [isEditing, setIsEditing] = useState(false);
-
   const OverlayOne = () => (
     <ModalOverlay
       bg="blackAlpha.300"
@@ -58,22 +57,8 @@ const AdminSideBar = () => {
     firstName: "John",
     lastName: "Doe",
     email: "john.doe@example.com",
-    role: "adimin",
+    role: "admin",
   });
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setUser((prevUser) => ({
-      ...prevUser,
-      [name]: value,
-    }));
-  };
-  const handleEditClick = () => {
-    setIsEditing(!isEditing);
-  };
-  const handleSaveClick = () => {
-    setIsEditing(false);
-  };
 
   const OverlayTwo = () => (
     <ModalOverlay
@@ -98,77 +83,89 @@ const AdminSideBar = () => {
         <div className="flex-1 flex flex-col justify-between items-center bg-[#1c1c24] rounded-[20px] w-[76px] py-4 mt-12">
           <div className="flex flex-col justify-center items-center gap-3">
             {/* Manual iteration of navlinks */}
-            <Icon
-              imgUrl={dashboard}
-              name="dashboard"
-              styles="/* Add your styles for dashboard */"
-              isActive={isActive === "dashboard"}
-              handleClick={() => {
-                setIsActive("dashboard");
-                navigate("/admin/home");
-              }}
-            />
-            <Icon
-              imgUrl={createCampaign}
-              name="campaign"
-              styles="/* Add your styles for campaign */"
-              isActive={isActive === "campaign"}
-              handleClick={() => {
-                setIsActive("campaign");
-                navigate("/admin/courses");
-              }}
-            />
-            <Icon
-              imgUrl={payment}
-              name="payment"
-              styles="/* Add your styles for payment */"
-              isActive={isActive === "payment"}
-              handleClick={() => {
-                setIsActive("payment");
-                navigate("/admin/enquiry");
-              }}
-            />
-            <Icon
-              imgUrl={withdraw}
-              name="withdraw"
-              styles="/* Add your styles for withdraw */"
-              isActive={isActive === "withdraw"}
-              handleClick={() => {
-                setIsActive("withdraw");
-                navigate("/admin/settings");
-              }}
-            />
-
-            <button
-              onClick={onOpen}
-              className="w-[48px] h-[48px] rounded-[10px] bg-gray-00 flex justify-center items-center cursor-pointer"
-            >
-              {" "}
+            <div className="icon-container" data-icon="Dashboard">
               <Icon
-                imgUrl={profile}
-                name="profile"
-                styles="/* Add your styles for profile */"
-                isActive={isActive === "profile"}
-                // handleClick={() => {
-                //   setIsActive("profile");
-                //   navigate("/user/profile");
-                // }}
+                imgUrl={dashboard}
+                name="dashboard"
+                styles="/* Add your styles for dashboard */"
+                isActive={isActive === "dashboard"}
+                handleClick={() => {
+                  setIsActive("dashboard");
+                  navigate("/admin/home");
+                }}
+              />
+            </div>
+
+            <div className="icon-container" data-icon="View Courses">
+              <Icon
+                imgUrl={createCampaign}
+                name="campaign"
+                styles="/* Add your styles for campaign */"
+                isActive={isActive === "campaign"}
+                handleClick={() => {
+                  setIsActive("campaign");
+                  navigate("/admin/courses");
+                }}
+              />
+            </div>
+            <div className="icon-container" data-icon="User Enquiry">
+              <Icon
+                imgUrl={payment}
+                name="payment"
+                styles="/* Add your styles for payment */"
+                isActive={isActive === "payment"}
+                handleClick={() => {
+                  setIsActive("payment");
+                  navigate("/admin/enquiry");
+                }}
+              />
+            </div>
+            <div className="icon-container" data-icon="Site Settings">
+              <Icon
+                imgUrl={withdraw}
+                name="withdraw"
+                styles="/* Add your styles for withdraw */"
+                isActive={isActive === "withdraw"}
+                handleClick={() => {
+                  setIsActive("withdraw");
+                  navigate("/admin/settings");
+                }}
+              />
+            </div>
+            <div className="icon-container" data-icon="Profile">
+              <button
                 onClick={onOpen}
+                className="w-[48px] h-[48px] rounded-[10px] bg-gray-00 flex justify-center items-center cursor-pointer"
               >
                 {" "}
-              </Icon>
-            </button>
-
-            <Icon
-              imgUrl={logout}
-              name="logout"
-              styles="/* Add your styles for logout */"
-              isActive={isActive === "logout"}
-              handleClick={() => {
-                setIsActive("logout");
-                navigate("/login");
-              }}
-            />
+                <Icon
+                  imgUrl={profile}
+                  name="profile"
+                  styles="/* Add your styles for profile */"
+                  isActive={isActive === "profile"}
+                  // handleClick={() => {
+                  //   setIsActive("profile");
+                  //   navigate("/user/profile");
+                  // }}
+                  onClick={onOpen}
+                >
+                  {" "}
+                </Icon>
+              </button>
+            </div>
+            <div className="icon-container" data-icon="Logout">
+              <Icon
+                imgUrl={logout}
+                name="logout"
+                styles="/* Add your styles for logout */"
+                isActive={isActive === "logout"}
+                handleClick={() => {
+                  setIsActive("logout");
+                  localStorage.clear();
+                  navigate("/login");
+                }}
+              />
+            </div>
           </div>
           <Icon styles="bg-[#1c1c24] shadow-secondary" imgUrl={sun} />
         </div>
@@ -196,73 +193,13 @@ const AdminSideBar = () => {
                 Last name : <b>{user.email}</b>{" "}
               </FormLabel>
               <FormLabel>
+                Role : <b>{user.role}</b>{" "}
+              </FormLabel>
+              <FormLabel>
                 College :{" "}
                 <b>Sri krishna college of engineering and technology</b>{" "}
               </FormLabel>
             </FormControl>
-            {isEditing ? (
-              <div className="edit-form">
-                {/* Add form fields for editing user profile */}
-                {/* <label>
-                  Company Name:
-                  <Input
-                    type="text"
-                    name="companyname"
-                    value={user.companyname}
-                    onChange={handleInputChange}
-                  />
-                </label> */}
-                <br></br>
-                <label>
-                  FirstName:
-                  <br></br>
-                  <Input
-                    type="text"
-                    name="firstName"
-                    value={user.firstName}
-                    onChange={handleInputChange}
-                  />
-                </label>
-                <br></br>
-                <label>
-                  LastName:
-                  <br></br>
-                  <Input
-                    type="text"
-                    name="lastName"
-                    value={user.lastName}
-                    onChange={handleInputChange}
-                  />
-                </label>
-                <br></br>
-
-                <label>
-                  Email:
-                  <br></br>
-                  <Input
-                    type="email"
-                    name="email"
-                    value={user.email}
-                    onChange={handleInputChange}
-                  />
-                </label>
-                <br></br>
-                <label>
-                  role:
-                  <br></br>
-                  <Input
-                    type="text"
-                    name="role"
-                    value={user.role}
-                    onChange={handleInputChange}
-                  />
-                </label>
-                {/* Add more form fields as needed */}
-                <Button onClick={handleSaveClick}>Save</Button>
-              </div>
-            ) : (
-              <Button onClick={handleEditClick}>Edit</Button>
-            )}
           </ModalBody>
           <ModalFooter>
             <Button onClick={onClose}>Close</Button>

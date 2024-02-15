@@ -20,7 +20,7 @@ public class EnrolledcourseModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    public long enrolledId;
+    public long enrolled_id;
     // public long courseId;
     public String date;
     public String status;
@@ -49,11 +49,11 @@ public class EnrolledcourseModel {
     }
 
     public long getEnrolledId() {
-        return enrolledId;
+        return enrolled_id;
     }
 
     public void setEnrolledId(long enrolledId) {
-        this.enrolledId = enrolledId;
+        this.enrolled_id = enrolledId;
     }
     // public long getCourseId() {
     // return courseId;

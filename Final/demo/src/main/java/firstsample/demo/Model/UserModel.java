@@ -24,10 +24,37 @@ public class UserModel {
 	private Long user_id;
 	private String user_name = "";
 	private String email = "";
+	private String DOB;
+	private String College;
+	private String phone;
 	// private String password = "";
 	// @ManyToMany(fetch=FetchType.LAZY,cascade=CascadeType.ALL,mappedBy = "user")
 	// @JoinColumn(name="user_id")
 	// public List<EnquiryModel> enrolled;
+
+	public String getDOB() {
+		return DOB;
+	}
+
+	public void setDOB(String dOB) {
+		DOB = dOB;
+	}
+
+	public String getCollege() {
+		return College;
+	}
+
+	public void setCollege(String college) {
+		College = college;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
 
 	public Long getUser_id() {
 		return user_id;

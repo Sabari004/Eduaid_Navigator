@@ -8,21 +8,31 @@ const Courses = () => {
   const { id } = useParams();
   const [course, setCourse] = useState({});
   const [user, setUser] = useState({});
+  const [enrolled, setEnrolled] = useState([]);
   useEffect(() => {
     axios.get(`http://localhost:8989/getcourse/${id}`).then((r) => {
       setCourse(r.data);
+      axios
+        .get(
+          `http://localhost:8989/api/v1/auth/getuser/${
+            JSON.parse(localStorage.getItem("user")).email
+          }`
+        )
+        .then((r2) => {
+          setUser(r2.data);
+          console.log(r2.data);
+          axios
+            .get(
+              `http://localhost:8989/getEnrollUser/${r2.data.id}/${r.data.course_id}`
+            )
+            .then((r1) => {
+              console.log(r1.data);
+              setEnrolled(r1.data);
+            });
+        });
     });
-    axios
-      .get(
-        `http://localhost:8989/api/v1/auth/getuser/${
-          JSON.parse(localStorage.getItem("user")).email
-        }`
-      )
-      .then((r) => {
-        setUser(r.data);
-        console.log(r.data);
-      });
   }, []);
+  const CustomButton = ({ en }) => {};
   return (
     <>
       <div className="relative sm:-8 p-4 bg-[#2D033B]  min-h-screen flex flex-row">
@@ -102,26 +112,57 @@ const Courses = () => {
                         <p data-id="38">{course.duration}</p>
                       </div>
                       <div className="grid gap-1" data-id="36">
-                        <button
-                          className="w-full bg-blue-600 p-3 rounded-md text-white font-bold "
-                          onClick={(e) => {
-                            axios
-                              .post("http://localhost:8989/user/postEnroll", {
-                                status: "Ongoing",
-                                date: "28-01-2024",
-                                courses: course,
-                                user: {
-                                  user_id: user.id,
-                                  user_name: user.name,
-                                  email: user.email,
-                                },
-                                enrolledId: 1,
-                              })
-                              .then((r) => alert("Enrolled"));
-                          }}
-                        >
-                          Enroll
-                        </button>
+                        {enrolled.length === 0 && (
+                          <button
+                            className="w-full bg-blue-600 p-3 rounded-md text-white font-bold "
+                            onClick={(e) => {
+                              const id = Math.floor(Math.random() * 10000) + 1;
+                              console.log(id);
+                              axios
+                                .post("http://localhost:8989/user/postEnroll", {
+                                  status: "Ongoing",
+                                  date: "28-01-2024",
+                                  courses: course,
+                                  user: {
+                                    user_id: user.id,
+                                    user_name: user.name,
+                                    email: user.email,
+                                  },
+                                  enrolled_id: id,
+                                  enrolledId: id,
+                                  // enrolledId: Math.floor(Math.random() * 10000) + 1
+                                })
+                                .then((r) => alert("Enrolled"));
+                            }}
+                          >
+                            Enroll
+                          </button>
+                        )}
+                        {enrolled !== null &&
+                          enrolled[0]?.status === "Ongoing" && (
+                            <button
+                              className="w-full bg-orange-400 p-3 rounded-md text-white font-bold "
+                              onClick={(e) => {
+                                // console.log(id);
+                                const enroll = enrolled[0];
+                                enroll.status = "Completed";
+                                axios
+                                  .post(
+                                    "http://localhost:8989/user/postEnroll",
+                                    enroll
+                                  )
+                                  .then((r) => alert("Completed"));
+                              }}
+                            >
+                              Ongoing
+                            </button>
+                          )}
+                        {enrolled !== null &&
+                          enrolled[0]?.status === "Completed" && (
+                            <button className="w-full bg-green-500 p-3 rounded-md text-white font-bold ">
+                              Completed
+                            </button>
+                          )}
                       </div>
                     </div>
                   </div>

@@ -54,6 +54,11 @@ public class EnrolledController {
 		return ServiceImp.findEnrolledByUserAndCourse(id, cid);
 	}
 
+	@GetMapping("/getEnrollCourse/{cid}")
+	public List<EnrolledcourseModel> findStudentEnrollByCourse(@PathVariable int cid) {
+		return ServiceImp.findEnrolledCourse(cid);
+	}
+
 	@GetMapping("/getAllEnrolls")
 	public List<EnrolledcourseModel> findAllEnrolledDetails() {
 		return ServiceImp.findAllEnrolledDetails();

@@ -33,7 +33,7 @@ const Card = ({ det }) => {
 
   return (
     <div className="mt-[70px] ml-5 ">
-      <div class="relative flex flex-col mt-6 text-gray-700 bg-white shadow-md bg-clip-border rounded-xl w-96">
+      <div class="h-[450px] relative flex flex-col mt-6 text-gray-700 bg-white shadow-md bg-clip-border rounded-xl w-96">
         <div class="relative h-56 mx-4 -mt-6 overflow-hidden text-white shadow-lg bg-clip-border rounded-xl bg-blue-gray-500 shadow-blue-gray-500/40">
           <img className="h-56" src={det.img_url} alt="card-image" />
         </div>
@@ -41,7 +41,7 @@ const Card = ({ det }) => {
           <h5 class="block mb-2 font-sans text-xl antialiased font-semibold leading-snug tracking-normal text-blue-gray-900">
             {det.course_name}
           </h5>
-          <p class="block font-sans text-base antialiased font-light leading-relaxed text-inherit">
+          <p class="h-[100px] block font-sans text-base antialiased font-light leading-relaxed text-inherit">
             {det.description}
           </p>
         </div>
@@ -84,28 +84,6 @@ const AdminViewCourse = () => {
     role: "adimin",
   });
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setUser((prevUser) => ({
-      ...prevUser,
-      [name]: value,
-    }));
-  };
-  const handleEditClick = () => {
-    setIsEditing(!isEditing);
-  };
-  const handleSaveClick = () => {
-    setIsEditing(false);
-  };
-
-  const OverlayTwo = () => (
-    <ModalOverlay
-      bg="none"
-      backdropFilter="auto"
-      backdropInvert="80%"
-      backdropBlur="2px"
-    />
-  );
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [overlay, setOverlay] = React.useState(<OverlayOne />);
   const navigate = useNavigate();

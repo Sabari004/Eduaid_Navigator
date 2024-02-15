@@ -62,6 +62,10 @@ public class EnrolledService {
         return (List<EnrolledcourseModel>) enrolledRepository.findByUserIdAndCourseId(id, cid);
     }
 
+    public List<EnrolledcourseModel> findEnrolledCourse(int cid) {
+        return (List<EnrolledcourseModel>) enrolledRepository.findByCourseId(cid);
+    }
+
     public void deleteEnrolledDetails(int enrolledId) {
         enrolledRepository.deleteByEnrolledId(enrolledId);
     }

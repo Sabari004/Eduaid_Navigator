@@ -1,9 +1,34 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
 import AdminSideBar from "../components/AdminSideBar";
-
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import {
+  Button,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+  ModalFooter,
+  Text,
+  useDisclosure,
+  FormControl,
+  FormLabel,
+  Input,
+  Avatar,
+} from "@chakra-ui/react";
 const AdminHome = () => {
+  const OverlayOne = () => (
+    <ModalOverlay
+      bg="blackAlpha.300"
+      backdropFilter="blur(10px) hue-rotate(90deg)"
+    />
+  );
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [overlay, setOverlay] = React.useState(<OverlayOne />);
   const testUser = {
     name: "John Doe",
     email: "john@example.com",
@@ -12,17 +37,40 @@ const AdminHome = () => {
     status: "Active",
     role: "User",
   };
+  const [course, setCourse] = useState(0);
+  const [courses, setCourses] = useState([]);
+  const [user, setUser] = useState([]);
+  const [count, setCount] = useState();
+  const [rupee, setRupee] = useState();
+  const [id1, setId] = useState(1);
+  const navigate = useNavigate();
+  useEffect(() => {
+    const id = JSON.parse(localStorage.getItem("user"));
+    axios.get(`http://localhost:8989/api/v1/auth/getAllUser`).then((r) => {
+      console.log(r.data);
+      setUser(r.data);
+    });
+    axios.get("http://localhost:8989/getAllCourses").then((r) => {
+      setCourse(r.data.length);
+    });
+    axios.get(`http://localhost:8989/getAllEnrolls`).then((r1) => {
+      // const completedCoursesCount = r1.data.filter(
+      //   (item) => item.courses.status === "Ongoing"
+      // ).length;
+      // setCount(completedCoursesCount);
+      // if (count != null && count !== 0)
+      //   console.log(completedCoursesCount);
+      setCourses(r1.data);
 
-  const users = [
-    testUser,
-    testUser,
-    testUser,
-    testUser,
-    testUser,
-    testUser,
-    testUser,
-    testUser,
-  ];
+      let r2 = 0;
+      console.log(r1.data);
+      for (let i = 0; i < r1.data.length; i++) {
+        r2 += r1.data[i].courses.fees;
+      }
+      setRupee(r2);
+    });
+  }, []);
+
   return (
     <>
       <div className="relative sm:-8 p-4 bg-[#2D033B]  min-h-screen flex flex-row">
@@ -74,9 +122,9 @@ const AdminHome = () => {
 
                     <div class="mx-5 h-[80px]">
                       <h4 class="text-2xl font-semibold text-gray-700">
-                        8,282
+                        {user.length}
                       </h4>
-                      <div class="text-gray-500">New Users</div>
+                      <div class="text-gray-500">Users</div>
                     </div>
                   </div>
                 </div>
@@ -106,7 +154,9 @@ const AdminHome = () => {
                     </div>
 
                     <div class="mx-5 h-[80px]">
-                      <h4 class="text-2xl font-semibold text-gray-700">200</h4>
+                      <h4 class="text-2xl font-semibold text-gray-700">
+                        {course}
+                      </h4>
                       <div class="text-gray-500">Total Courses</div>
                     </div>
                   </div>
@@ -138,9 +188,9 @@ const AdminHome = () => {
 
                     <div class="mx-5 h-[80px]">
                       <h4 class="text-2xl font-semibold text-gray-700">
-                        215,542
+                        ₹{rupee}
                       </h4>
-                      <div class="text-gray-500">Total Users</div>
+                      <div class="text-gray-500">Revenue Generated</div>
                     </div>
                   </div>
                 </div>
@@ -155,9 +205,7 @@ const AdminHome = () => {
                         <th class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
                           Name
                         </th>
-                        <th class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
-                          Title
-                        </th>
+
                         <th class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
                           Status
                         </th>
@@ -169,58 +217,54 @@ const AdminHome = () => {
                     </thead>
 
                     <tbody class="bg-white">
-                      {users.map((u) => (
-                        <tr>
-                          <td class="px-6 py-4 border-b border-gray-200 whitespace-nowrap">
-                            <div class="flex items-center">
-                              <div class="flex-shrink-0 w-10 h-10">
-                                <img
-                                  class="w-10 h-10 rounded-full"
-                                  src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                                  alt=""
-                                />
-                              </div>
-
-                              <div class="ml-4">
-                                <div class="text-sm font-medium leading-5 text-gray-900">
-                                  {u.name}
+                      {user.length > 0 &&
+                        user.map((u) => (
+                          <tr>
+                            <td class="px-6 py-4 border-b border-gray-200 whitespace-nowrap">
+                              <div class="flex items-center">
+                                <div class="flex-shrink-0 w-10 h-10">
+                                  <img
+                                    class="w-10 h-10 rounded-full"
+                                    src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                                    alt=""
+                                  />
                                 </div>
-                                <div class="text-sm leading-5 text-gray-500">
-                                  {u.email}
+
+                                <div class="ml-4">
+                                  <div class="text-sm font-medium leading-5 text-gray-900">
+                                    {u.name}
+                                  </div>
+                                  <div class="text-sm leading-5 text-gray-500">
+                                    {u.email}
+                                  </div>
                                 </div>
                               </div>
-                            </div>
-                          </td>
+                            </td>
 
-                          <td class="px-6 py-4 border-b border-gray-200 whitespace-nowrap">
-                            <div class="text-sm leading-5 text-gray-900">
-                              {u.title}
-                            </div>
-                            <div class="text-sm leading-5 text-gray-500">
-                              {u.title2}
-                            </div>
-                          </td>
+                            <td class="px-6 py-4 border-b border-gray-200 whitespace-nowrap">
+                              <span class="inline-flex px-2 text-xs font-semibold leading-5 text-green-800 bg-green-100 rounded-full">
+                                Active
+                              </span>
+                            </td>
 
-                          <td class="px-6 py-4 border-b border-gray-200 whitespace-nowrap">
-                            <span class="inline-flex px-2 text-xs font-semibold leading-5 text-green-800 bg-green-100 rounded-full">
-                              {u.status}
-                            </span>
-                          </td>
+                            <td class="px-6 py-4 text-sm leading-5 text-gray-500 border-b border-gray-200 whitespace-nowrap">
+                              {u.role}
+                            </td>
 
-                          <td class="px-6 py-4 text-sm leading-5 text-gray-500 border-b border-gray-200 whitespace-nowrap">
-                            {u.role}
-                          </td>
-
-                          <td class="px-6 py-4 text-sm font-medium leading-5 text-right border-b border-gray-200 whitespace-nowrap">
-                            <a
-                              href="#"
-                              class="text-indigo-600 hover:text-indigo-900"
-                            >
-                              Edit
-                            </a>
-                          </td>
-                        </tr>
-                      ))}
+                            <td class="px-6 py-4 text-sm font-medium leading-5 text-right border-b border-gray-200 whitespace-nowrap">
+                              <button
+                                className=" bg-orange-600 text-white p-2 rounded-md"
+                                onClick={onOpen}
+                                onMouseEnter={(e) => {
+                                  setId(u.id);
+                                  console.log(u.id);
+                                }}
+                              >
+                                View
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
                     </tbody>
                   </table>
                 </div>
@@ -229,6 +273,69 @@ const AdminHome = () => {
           </div>
         </div>
       </div>
+      <Modal isCentered isOpen={isOpen} onClose={onClose} size="xl">
+        {overlay}
+        <ModalContent>
+          <ModalHeader>Course Enrolled</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <table class="min-w-full">
+              <thead>
+                <tr>
+                  <th class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
+                    Course
+                  </th>
+                  <th class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
+                    Instructor
+                  </th>
+                  <th class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
+                    Status
+                  </th>
+                </tr>
+              </thead>
+
+              <tbody class="bg-white">
+                {courses
+                  .filter((cou) => cou.user.user_id === id1)
+                  .map((u) => (
+                    <tr>
+                      <td class="px-6 py-4 border-b border-gray-200 whitespace-nowrap">
+                        <div class="flex items-center">
+                          <div class="flex-shrink-0 w-10 h-10">
+                            <img
+                              class="w-10 h-10 rounded-full"
+                              src={u.courses.img_url}
+                              alt=""
+                            />
+                          </div>
+
+                          <div class="ml-4">
+                            <div class="text-sm leading-5 text-gray-900">
+                              {u.courses.course_name}
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+                      <td class="px-6 py-4 border-b border-gray-200 whitespace-nowrap">
+                        <div class="text-sm font-medium leading-5 text-gray-900">
+                          {u.courses.instructor}
+                        </div>
+                      </td>
+
+                      <td class="px-6 py-4 border-b border-gray-200 whitespace-nowrap">
+                        <span class="inline-flex px-2 text-xs font-semibold leading-5 text-green-800 bg-green-100 rounded-full">
+                          {u.status}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          </ModalBody>
+          {/* <ModalFooter>
+          </ModalFooter> */}
+        </ModalContent>
+      </Modal>
     </>
   );
 };
